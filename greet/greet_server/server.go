@@ -12,6 +12,26 @@ import (
 
 type server struct{}
 
+func (s *server) GreetManyTimes(request *greetpb.GreetManyTimesRequest,
+	timesServer greetpb.GreetService_GreetManyTimesServer) error {
+
+	log.Printf("Invoked Function GreetManyTimes")
+
+	firstName := request.Greeting.FirstName
+	result := "Hello " + firstName
+
+	res := &greetpb.GreetManyTimesResponse{
+		Result: result,
+	}
+
+	for i := 0; i < 10; i++ {
+		timesServer.Send(res)
+		log.Printf("Sent Greeting Number: %v", i+1)
+	}
+
+	return nil
+}
+
 func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
 	fmt.Printf("Greet function was invoked with: %v\n", req)
 	firstName := req.GetGreeting().GetFirstName()
