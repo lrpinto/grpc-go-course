@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"time"
 
 	"github.com/lrpinto/grpc-go-course/greet/greetpb"
 	"google.golang.org/grpc"
@@ -25,14 +26,19 @@ func (s *server) GreetManyTimes(request *greetpb.GreetManyTimesRequest,
 	}
 
 	for i := 0; i < 10; i++ {
-		timesServer.Send(res)
-		log.Printf("Sent Greeting Number: %v", i+1)
+		err := timesServer.Send(res)
+		if err != nil {
+			log.Fatalf("Failed Greeting Number: %v", i+1)
+		} else {
+			log.Printf("Sent Greeting Number: %v", i+1)
+			time.Sleep(1000)
+		}
 	}
 
 	return nil
 }
 
-func (*server) Greet(ctx context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
+func (*server) Greet(_ context.Context, req *greetpb.GreetRequest) (*greetpb.GreetResponse, error) {
 	fmt.Printf("Greet function was invoked with: %v\n", req)
 	firstName := req.GetGreeting().GetFirstName()
 	result := "Hello " + firstName
