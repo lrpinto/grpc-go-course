@@ -12,9 +12,9 @@ import (
 
 type server struct{}
 
-func (s server) Calculator(ctx context.Context, request *calculatorpb.CalculatorRequest) (*calculatorpb.CalculatorResponse, error) {
-	res := &calculatorpb.CalculatorResponse{
-		Sum: int64(request.Int1 + request.Int2),
+func (s server) Sum(ctx context.Context, request *calculatorpb.SumRequest) (*calculatorpb.SumResponse, error) {
+	res := &calculatorpb.SumResponse{
+		SumResult: int64(request.FirstNumber + request.SecondNumber),
 	}
 
 	return res, nil

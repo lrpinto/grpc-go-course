@@ -26,18 +26,18 @@ func main() {
 }
 
 func doUnary(c calculatorpb.CalculatorServiceClient) {
-	fmt.Println("Starting to do Unary RPC")
+	fmt.Println("Starting to do Sum Unary RPC")
 
-	req := &calculatorpb.CalculatorRequest{
-		Int1: 3,
-		Int2: 10,
+	req := &calculatorpb.SumRequest{
+		FirstNumber:  3,
+		SecondNumber: 10,
 	}
 
 	ctx := context.Background()
-	res, err := c.Calculator(ctx, req)
+	res, err := c.Sum(ctx, req)
 	if err != nil {
 		log.Fatalf("Failed to request #{err}")
 	}
 
-	log.Printf("%d + %d = %d", req.Int1, req.Int2, res.Sum)
+	log.Printf("%d + %d = %d", req.FirstNumber, req.SecondNumber, res.SumResult)
 }
