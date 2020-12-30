@@ -12,6 +12,35 @@ import (
 
 type server struct{}
 
+func (s server) PrimeNumberDecomposition(request *calculatorpb.PrimeNumberDecompositionRequest,
+	decompositionServer calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
+
+	log.Println("Invoked Function PrimeNumberDecomposition")
+
+	number := request.Number
+
+	res := &calculatorpb.PrimeNumberDecompositionResponse{
+		Result: -1,
+	}
+
+	// Decompose number in prime factors
+	k := int64(2)
+	for number > 1 {
+		if number%k == 0 {
+			res.Result = k
+			err := decompositionServer.Send(res)
+			if err != nil {
+				log.Fatalf("Failed to send response: %v", res)
+			}
+			number /= k
+		} else {
+			k++
+		}
+	}
+
+	return nil
+}
+
 func (s server) Sum(ctx context.Context, request *calculatorpb.SumRequest) (*calculatorpb.SumResponse, error) {
 	res := &calculatorpb.SumResponse{
 		SumResult: int64(request.FirstNumber + request.SecondNumber),
