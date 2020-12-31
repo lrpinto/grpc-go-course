@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"net"
 
@@ -11,6 +12,40 @@ import (
 )
 
 type server struct{}
+
+func (s server) ComputeAverage(averageServer calculatorpb.CalculatorService_ComputeAverageServer) error {
+	log.Printf("ComputeAverage Invoked...")
+
+	var n int32
+	var sum int64
+	var avg float32
+	for {
+		req, err := averageServer.Recv()
+		if err == io.EOF {
+			// finished receiving parcels
+			if n == 0 {
+				avg = 0
+			} else {
+				avg = float32(sum) / float32(n)
+			}
+			res := &calculatorpb.ComputeAverageResponse{
+				Average: avg,
+			}
+			err := averageServer.SendAndClose(res)
+			if err != nil {
+				log.Fatalf("Error while sending response: %v", res)
+				return err
+			}
+		} else if err != nil {
+			log.Fatalf("Error receiving message: %v", err)
+		} else {
+			sum += int64(req.GetParcel())
+			n++
+		}
+	}
+
+	return nil
+}
 
 func (s server) PrimeNumberDecomposition(request *calculatorpb.PrimeNumberDecompositionRequest,
 	decompositionServer calculatorpb.CalculatorService_PrimeNumberDecompositionServer) error {
