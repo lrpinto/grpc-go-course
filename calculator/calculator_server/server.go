@@ -31,11 +31,7 @@ func (s server) ComputeAverage(averageServer calculatorpb.CalculatorService_Comp
 			res := &calculatorpb.ComputeAverageResponse{
 				Average: avg,
 			}
-			err := averageServer.SendAndClose(res)
-			if err != nil {
-				log.Fatalf("Error while sending response: %v", res)
-				return err
-			}
+			return averageServer.SendAndClose(res)
 		} else if err != nil {
 			log.Fatalf("Error receiving message: %v", err)
 		} else {
