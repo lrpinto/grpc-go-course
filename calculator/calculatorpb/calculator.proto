@@ -21,13 +21,12 @@ message PrimeNumberDecompositionResponse {
 }
 
 message ComputeAverageRequest {
-  int32 number = 1;
+  int32 parcel = 1;
 }
 
 message ComputeAverageResponse {
-  int32 result = 1;
+  float average = 1;
 }
-
 
 service CalculatorService {
   // Unary
