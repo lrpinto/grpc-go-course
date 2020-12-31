@@ -25,7 +25,7 @@ message ComputeAverageRequest {
 }
 
 message ComputeAverageResponse {
-  float average = 1;
+  double average = 1;
 }
 
 service CalculatorService {

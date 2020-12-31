@@ -16,9 +16,9 @@ type server struct{}
 func (s server) ComputeAverage(averageServer calculatorpb.CalculatorService_ComputeAverageServer) error {
 	log.Printf("ComputeAverage Invoked...")
 
-	var n int32
+	var n int64
 	var sum int64
-	var avg float32
+	var avg float64
 	for {
 		req, err := averageServer.Recv()
 		if err == io.EOF {
@@ -26,7 +26,7 @@ func (s server) ComputeAverage(averageServer calculatorpb.CalculatorService_Comp
 			if n == 0 {
 				avg = 0
 			} else {
-				avg = float32(sum) / float32(n)
+				avg = float64(sum) / float64(n)
 			}
 			res := &calculatorpb.ComputeAverageResponse{
 				Average: avg,
