@@ -37,4 +37,6 @@ service CalculatorService {
 
   // Client Streaming
   rpc ComputeAverage (stream ComputeAverageRequest) returns (ComputeAverageResponse){}
+
+  //
 }
